@@ -4,14 +4,6 @@ A high-performance, distributed API rate limiter built from scratch using **Node
 
 ---
 
-## Quick Interview Refresh (The 60-Second Summary)
-
-* **What is this?** A backend middleware gateway that limits how many API requests a user can make within a given timeframe (e.g., max 3 requests, refilling at 1 token/sec).
-* **The Analogy:** It acts like a security guard at a popular bakery. Every customer gets a bucket with a maximum of 3 tokens. Each pastry costs 1 token. When the bucket is empty, they must wait for it to refill.
-* **The Core Problem Solved:** Local server memory (`Map()`) breaks when scaling to multiple servers behind a load balancer. Moving the state to a shared database (**Redis**) introduces **Race Conditions** (concurrency bugs). This architecture solves both problems using **Atomic Lua Scripts**.
-
----
-
 ## Key Architectural Concepts
 
 ### 1. Lazy Evaluation (Resource Optimization)
@@ -46,3 +38,59 @@ Ensure you have **Node.js** and **Docker Desktop** installed.
 Wake up the isolated background Redis container:
 ```bash
 docker start my-redis
+
+## 1. Start Redis
+
+If running for the first time:
+
+```bash
+$ docker run --name my-redis -p 6379:6379 -d redis
+```
+
+If the container already exists:
+
+```bash
+$ docker start my-redis
+```
+
+---
+
+## 2. Start the API Gateway
+
+Open a terminal and run:
+
+```bash
+$ npm install
+$ node server.js
+```
+
+Expected output:
+
+```console
+Gateway running on http://localhost:3000
+✅ Successfully connected to background Redis container!
+```
+
+---
+
+## 3. Run the Stress Test
+
+Open a second terminal:
+
+```bash
+$ node stressTest.js
+```
+
+Expected output:
+
+```console
+🚀 Starting stress test: Firing 10 requests at once...
+
+[Request #1] Status: 200
+[Request #2] Status: 200
+[Request #3] Status: 200
+[Request #4] Status: 429
+...
+🏁 Stress test complete.
+```
+
