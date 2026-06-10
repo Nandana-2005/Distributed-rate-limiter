@@ -84,13 +84,13 @@ $ node stressTest.js
 Expected output:
 
 ```console
-🚀 Starting stress test: Firing 10 requests at once...
+Starting stress test: Firing 10 requests at once...
 
 [Request #1] Status: 200
 [Request #2] Status: 200
 [Request #3] Status: 200
 [Request #4] Status: 429
 ...
-🏁 Stress test complete.
+Stress test complete.
 ```
 
